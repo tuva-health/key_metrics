@@ -1,0 +1,39 @@
+version: 2
+
+seeds:
+  - name: data_quality__analytical_key_metrics_tuva_synthetic_large
+    description: Analytical key metric reference values calculated from the Tuva synthetic large Medicare CCLF data source. This seed is used by the optional key metrics regression CI check to detect unintended metric changes.
+    config:
+      schema: |
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_key_metrics{% else %}key_metrics{%- endif -%}
+      alias: analytical_key_metrics_tuva_synthetic_large
+      column_types:
+        id: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+        category: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+        metric: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(512) {%- endif -%}
+        result: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+      tags:
+        - key_metrics
+        - key_metrics_regression
+
+  - name: data_quality__analytical_key_metrics_medicare_lds
+    description: Analytical key metric reference values calculated from the Medicare LDS multi-year data source. These values are exposed in analytical key metrics as the Medicare FFS reference output.
+    config:
+      schema: |
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_key_metrics{% else %}key_metrics{%- endif -%}
+      alias: analytical_key_metrics_medicare_lds
+      column_types:
+        id: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+        category: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+        metric: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(512) {%- endif -%}
+        result: |
+          {%- if target.type in ("bigquery", "databricks") -%} string {%- else -%} varchar(256) {%- endif -%}
+      tags:
+        - key_metrics

@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: data_quality__analytical_key_metrics
+    description: Analytical key metrics aggregated by unioning persisted per-metric models from the key metrics package. Results are formatted from the analytical metric manifest, which is also the source of truth for each metric model and result type. The final result columns show the current run output next to Medicare FFS and Tuva Synthetic reference values.
+    config:
+      schema: |
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_key_metrics
+        {% else %}key_metrics{%- endif -%}
+      alias: analytical_key_metrics
+      tags:
+        - key_metrics
+      materialized: table
+    columns:
+      - name: id
+        description: Zero-padded four-character metric identifier derived from the analytical metric manifest sort order. The same metric has the same id across data sources.
+      - name: data_source
+        description: The data source for the analytical metric.
+      - name: category
+        description: The high-level analytical category for the metric.
+      - name: metric
+        description: The analytical metric name.
+      - name: result
+        description: Formatted analytical metric output from the data source currently being analyzed. Count-style metrics are rendered as whole-number text values, while utilization, PMPM, prevalence, percentage, and average metrics are rendered as text values rounded to at most two decimal places.
+      - name: medicare_ffs
+        description: Reference metric value calculated from the Medicare LDS multi-year dataset.
+      - name: tuva_synthetic
+        description: Reference metric value calculated from Tuva synthetic large Medicare CCLF data. This reference is also used by the optional key metrics regression CI check.
+
+  - name: data_quality__analytical_key_metrics_regression
+    description: Difference rows produced by comparing the Medicare CCLF analytical key metrics from Tuva synthetic large to the package-owned Tuva synthetic large reference seed. This model is disabled by default and only runs when enable_key_metrics_regression_test is true.
+    config:
+      schema: |
+        {%- if var('tuva_schema_prefix',None) != None -%}{{var('tuva_schema_prefix')}}_key_metrics
+        {% else %}key_metrics{%- endif -%}
+      alias: analytical_key_metrics_regression
+      tags:
+        - key_metrics
+        - key_metrics_regression
+      materialized: table
+    columns:
+      - name: id
+        description: Zero-padded four-character metric identifier being compared.
+      - name: difference_type
+        description: Type of regression difference detected between the baseline seed and the current analytical key metrics output.
+      - name: expected_category
+        description: Expected category from the Tuva synthetic large key metrics seed.
+      - name: actual_category
+        description: Current category calculated by analytical key metrics.
+      - name: expected_metric
+        description: Expected metric label from the Tuva synthetic large key metrics seed.
+      - name: actual_metric
+        description: Current metric label calculated by analytical key metrics.
+      - name: expected_result
+        description: Baseline result from the synthetic-large key metrics seed.
+      - name: actual_result
+        description: Current result calculated by analytical key metrics.

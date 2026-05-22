@@ -1,0 +1,136 @@
+id,category,metric,result
+0001,Demographics,Number Of Patients,1777835
+0002,Demographics,% Patients Deceased,7.36
+0003,Demographics,% Patients Aged 0-1,0
+0004,Demographics,% Patients Aged 2-17,0
+0005,Demographics,% Patients Aged 18-40,1.87
+0006,Demographics,% Patients Aged 41-64,8.12
+0007,Demographics,% Patients Aged 65-80,63.34
+0008,Demographics,% Patients Aged 81-100,26.15
+0009,Demographics,% Patients Aged 101 And Greater,0.52
+0010,Demographics,% Patients -- Sex = Female,54.05
+0011,Demographics,% Patients -- Sex = Male,45.95
+0012,Demographics,% Patients -- Sex = Unknown,0
+0013,Enrollment,Total Member Months,34627851
+0014,Enrollment,Members With Claims Without Enrollment,30
+0015,Enrollment,Average Member Months,19.48
+0016,Enrollment,Max Member Months,24
+0017,Chronic Disease,% Autoimmune Disease -- Crohn's Disease,0.57
+0018,Chronic Disease,% Autoimmune Disease -- Lupus,1.51
+0019,Chronic Disease,% Autoimmune Disease -- Rheumatoid Arthritis,3.38
+0020,Chronic Disease,% Autoimmune Disease -- Type 1 Diabetes,56.19
+0021,Chronic Disease,% Autoimmune Disease -- Ulcerative Colitis,0.82
+0022,Chronic Disease,% Cancer -- Breast Cancer,4.82
+0023,Chronic Disease,% Cancer -- Colorectal Cancer,1.23
+0024,Chronic Disease,% Cancer -- Lung Cancer,1.65
+0025,Chronic Disease,% Cardiovascular Disease -- Acute Myocardial Infarction,7.47
+0026,Chronic Disease,% Cardiovascular Disease -- Atherosclerosis,29.2
+0027,Chronic Disease,% Cardiovascular Disease -- Atrial Fibrillation,32
+0028,Chronic Disease,% Cardiovascular Disease -- Heart Failure,27
+0029,Chronic Disease,% Cardiovascular Disease -- Hypertension,67.74
+0030,Chronic Disease,% Cardiovascular Disease -- Stroke / Transient Ischemic Attack,6.54
+0031,Chronic Disease,% Mental Health -- Anxiety,23.4
+0032,Chronic Disease,% Mental Health -- Attention-Deficit Hyperactivity Disorder (ADHD),0.98
+0033,Chronic Disease,% Mental Health -- Bipolar,2.34
+0034,Chronic Disease,% Mental Health -- Depression,15.14
+0035,Chronic Disease,% Mental Health -- Obsessive-Compulsive Disorder (OCD),0.41
+0036,Chronic Disease,% Mental Health -- Personality Disorder,1.54
+0037,Chronic Disease,% Mental Health -- Post-Traumatic Stress Disorder (PTSD),1.67
+0038,Chronic Disease,% Mental Health -- Schizophrenia,1.18
+0039,Chronic Disease,% Metabolic Disease -- Chronic Kidney Disease,20
+0040,Chronic Disease,% Metabolic Disease -- Hyperlipidemia,66.77
+0041,Chronic Disease,% Metabolic Disease -- Metabolic Syndrome,0
+0042,Chronic Disease,% Metabolic Disease -- Obesity,24.61
+0043,Chronic Disease,% Metabolic Disease -- Type 2 Diabetes,56.19
+0044,Chronic Disease,% Neuro-degenerative Disease -- Alzheimer's Disease,0
+0045,Chronic Disease,% Neuro-degenerative Disease -- Amyotrophic Lateral Sclerosis (ALS),0.06
+0046,Chronic Disease,% Neuro-degenerative Disease -- Dementia,8.28
+0047,Chronic Disease,% Neuro-degenerative Disease -- Multiple Sclerosis,0.58
+0048,Chronic Disease,% Neuro-degenerative Disease -- Muscular Dystrophy,0.08
+0049,Chronic Disease,% Neuro-degenerative Disease -- Parkinson's Disease,9.29
+0050,Chronic Disease,% Pulmonary Disease -- Asthma,9.36
+0051,Chronic Disease,% Pulmonary Disease -- Chronic Obstructive Pulmonary Disease (COPD),14.35
+0052,Chronic Disease,% Pulmonary Disease -- Cystic Fibrosis,0.03
+0053,Chronic Disease,% Substance Use -- Alcohol,29.08
+0054,Chronic Disease,% Substance Use -- Cocaine,23.49
+0055,Chronic Disease,% Substance Use -- Opioid,1.68
+0056,Chronic Disease,% Substance Use -- Tobacco,3.46
+0057,Acute Care -- Emergency,Total Number Of ED Visits,1431547
+0058,Acute Care -- Emergency,% ED Visits -- Alcohol Related,0.38
+0059,Acute Care -- Emergency,"% ED Visits -- Emergent, ED Care Needed, Not Preventable/Avoidable",
+0060,Acute Care -- Emergency,"% ED Visits -- Emergent, ED Care Needed, Preventable/Avoidable",
+0061,Acute Care -- Emergency,"% ED Visits -- Emergent, Primary Care Treatable",
+0062,Acute Care -- Emergency,% ED Visits -- Injury,15.61
+0063,Acute Care -- Emergency,% ED Visits -- Mental Health Related,1.72
+0064,Acute Care -- Emergency,% ED Visits -- Non-Emergent,17.5
+0065,Acute Care -- Emergency,% ED Visits -- Not Classified,31.91
+0066,Acute Care -- Emergency,ED Visits PKPY,496.09
+0067,Acute Care -- Emergency,Average Cost Per Visit,1033.02
+0068,Acute Care -- Inpatient,Inpatient Visits PKPY,243.08
+0069,Acute Care -- Inpatient,Inpatient Days PKPY,1285.92
+0070,Acute Care -- Inpatient,Average Inpatient Length Of Stay,5.29
+0071,Acute Care -- Inpatient,% Mortality Rate,3.69
+0072,Acute Care -- Inpatient,Average Cost Per Visit,16658.59
+0073,Readmissions,Number Of Acute Inpatient Visits,701443
+0074,Readmissions,Number Of Index Admissions,513593
+0075,Readmissions,Number Of 30-Day Readmissions,95123
+0076,Readmissions,Number Of 30-Day Unplanned Readmissions,89009
+0077,Readmissions,% Index Admissions,73.22
+0078,Readmissions,% 30-Day All-Cause Readmissions,18.52
+0079,Readmissions,% 30-Day Unplanned Readmissions,17.33
+0080,Financial PMPM,Total PMPM Paid,1057.84
+0081,Financial PMPM,Total Medical PMPM Paid,1057.84
+0082,Financial PMPM,Total Pharmacy PMPM Paid,0
+0083,Financial PMPM,Inpatient -- Acute Inpatient PMPM Paid,332.4
+0084,Financial PMPM,Inpatient -- Inpatient Hospice PMPM Paid,2.17
+0085,Financial PMPM,Inpatient -- Inpatient Psychiatric PMPM Paid,5.63
+0086,Financial PMPM,Inpatient -- Inpatient Rehabilitation PMPM Paid,25.33
+0087,Financial PMPM,Inpatient -- Skilled Nursing PMPM Paid,82.11
+0088,Financial PMPM,Outpatient -- Ambulatory Surgery Center PMPM Paid,21.56
+0089,Financial PMPM,Outpatient -- Dialysis PMPM Paid,22.34
+0090,Financial PMPM,Outpatient -- Emergency Department PMPM Paid,32.18
+0091,Financial PMPM,Outpatient -- Home Health PMPM Paid,46.78
+0092,Financial PMPM,Outpatient -- Observation PMPM Paid,0
+0093,Financial PMPM,Outpatient -- Outpatient Hospice PMPM Paid,34.27
+0094,Financial PMPM,Outpatient -- Outpatient Hospital Or Clinic PMPM Paid,104.95
+0095,Financial PMPM,Outpatient -- Outpatient PT/OT/ST PMPM Paid,5.37
+0096,Financial PMPM,Outpatient -- Outpatient Psychiatric PMPM Paid,0.37
+0097,Financial PMPM,Outpatient -- Outpatient Radiology PMPM Paid,5.7
+0098,Financial PMPM,Outpatient -- Outpatient Rehabilitation PMPM Paid,1.19
+0099,Financial PMPM,Outpatient -- Outpatient Surgery PMPM Paid,83.34
+0100,Financial PMPM,Outpatient -- Urgent Care PMPM Paid,1.41
+0101,Financial PMPM,Office-Based -- Office-Based Other PMPM Paid,23.97
+0102,Financial PMPM,Office-Based -- Office-Based PT/OT/ST PMPM Paid,9.68
+0103,Financial PMPM,Office-Based -- Office-Based Radiology PMPM Paid,11.49
+0104,Financial PMPM,Office-Based -- Office-Based Surgery PMPM Paid,18.5
+0105,Financial PMPM,Office-Based -- Office-Based Visit PMPM Paid,45.14
+0106,Financial PMPM,Office-Based -- Telehealth Visit PMPM Paid,1.32
+0107,Financial PMPM,Ancillary -- Ambulance PMPM Paid,12.02
+0108,Financial PMPM,Ancillary -- Durable Medical Equipment PMPM Paid,34.82
+0109,Financial PMPM,Ancillary -- Lab PMPM Paid,25.46
+0110,Financial PMPM,Other -- Other PMPM Paid,5.8
+0111,Utilization PKPY,Inpatient -- Acute Inpatient Visits PKPY,243.08
+0112,Utilization PKPY,Inpatient -- Inpatient Hospice Visits PKPY,2.62
+0113,Utilization PKPY,Inpatient -- Inpatient Long Term Acute Care Visits PKPY,2.03
+0114,Utilization PKPY,Inpatient -- Inpatient Psych Visits PKPY,5.82
+0115,Utilization PKPY,Inpatient -- Inpatient Rehabilitation Visits PKPY,12.64
+0116,Utilization PKPY,Inpatient -- Inpatient Skilled Nursing Visits PKPY,136.7
+0117,Utilization PKPY,Inpatient -- Inpatient Substance Use Visits PKPY,0.01
+0118,Utilization PKPY,Outpatient -- Ambulatory Surgery Center Visits PKPY,189.11
+0119,Utilization PKPY,Outpatient -- Dialysis Visits PKPY,1201.51
+0120,Utilization PKPY,Outpatient -- Emergency Department Visits PKPY,496.09
+0121,Utilization PKPY,Outpatient -- Home Health Visits PKPY,1924.83
+0122,Utilization PKPY,Outpatient -- Outpatient Hospice Visits PKPY,48.19
+0123,Utilization PKPY,Outpatient -- Outpatient Hospital Or Clinic Visits PKPY,3751.66
+0124,Utilization PKPY,Outpatient -- Outpatient Injections Visits PKPY,121.53
+0125,Utilization PKPY,Outpatient -- Outpatient Psych Visits PKPY,35.53
+0126,Utilization PKPY,Outpatient -- Outpatient PT/OT/ST Visits PKPY,776.28
+0127,Utilization PKPY,Outpatient -- Outpatient Radiology Visits PKPY,1270.24
+0128,Utilization PKPY,Outpatient -- Outpatient Rehabilitation Visits PKPY,167.72
+0129,Utilization PKPY,Outpatient -- Outpatient Substance Use Visits PKPY,0
+0130,Utilization PKPY,Outpatient -- Outpatient Surgery Visits PKPY,686.25
+0131,Utilization PKPY,Outpatient -- Urgent Care Visits PKPY,168.38
+0132,Utilization PKPY,Office Based -- Office Visit Visits PKPY,5522.58
+0133,Utilization PKPY,Other -- Ambulance - Orphaned Visits PKPY,11.98
+0134,Utilization PKPY,Other -- DME - Orphaned Visits PKPY,1406.07
+0135,Utilization PKPY,Other -- Lab - Orphaned Visits PKPY,1990.61

@@ -10,6 +10,89 @@
     {{ return(key_metrics_schema_name()) }}
 {% endmacro %}
 
+{% macro key_metrics_actual_relation(node) %}
+    {% if node is none %}
+        {{ return(none) }}
+    {% endif %}
+
+    {{ return(
+        adapter.get_relation(
+            database=node.database,
+            schema=node.schema,
+            identifier=node.alias
+        )
+    ) }}
+{% endmacro %}
+
+{% macro key_metrics_actual_columns(relation) %}
+    {% if relation is none %}
+        {{ return([]) }}
+    {% endif %}
+
+    {{ return(adapter.get_columns_in_relation(relation)) }}
+{% endmacro %}
+
+{% macro key_metrics_has_column(columns, column_name) %}
+    {% set requested_name = column_name | lower %}
+    {% for column in columns %}
+        {% if column.name | lower == requested_name %}
+            {{ return(true) }}
+        {% endif %}
+    {% endfor %}
+    {{ return(false) }}
+{% endmacro %}
+
+{% macro key_metrics_source_key_sentinel() %}
+    {{ return('__dq_null__') }}
+{% endmacro %}
+
+{% macro key_metrics_empty_row_sql() %}
+    select 1 as _key_metrics_empty_row
+{% endmacro %}
+
+{% macro key_metrics_empty_result_guard_sql() %}
+    from (
+        {{ key_metrics_empty_row_sql() }}
+    ) as key_metrics_empty_row
+    where 1 = 0
+{% endmacro %}
+
+{% macro key_metrics_source_dimension_sql(relation) %}
+    {% set actual_columns = key_metrics_actual_columns(relation) %}
+
+    {% if key_metrics_has_column(actual_columns, 'data_source') %}
+        select distinct
+              coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
+            , cast(data_source as {{ dbt.type_string() }}) as data_source
+        from {{ relation }}
+
+        union all
+
+        select
+              '{{ key_metrics_source_key_sentinel() }}' as data_source_key
+            , cast(null as {{ dbt.type_string() }}) as data_source
+        from (
+            {{ key_metrics_empty_row_sql() }}
+        ) as key_metrics_empty_source
+        where not exists (
+            select 1
+            from {{ relation }}
+        )
+    {% else %}
+        select
+              '{{ key_metrics_source_key_sentinel() }}' as data_source_key
+            , cast(null as {{ dbt.type_string() }}) as data_source
+    {% endif %}
+{% endmacro %}
+
+{% macro key_metrics_quote_column(column_name) %}
+    {%- if target.type == 'fabric' -%}
+        [{{ column_name }}]
+    {%- else -%}
+        {{ column_name }}
+    {%- endif -%}
+{% endmacro %}
+
 {% macro dq_config_analytical_metric_model(alias_name) %}
     {{ config(
          enabled = var('enable_key_metrics', true) | as_bool,
@@ -27,7 +110,7 @@
         , cast(null as {{ dbt.type_string() }}) as category
         , cast(null as {{ dbt.type_string() }}) as metric
         , cast(null as {{ dbt.type_numeric() }}) as result
-    {{ the_tuva_project.dq_empty_result_guard_sql() }}
+    {{ key_metrics_empty_result_guard_sql() }}
 {% endmacro %}
 
 {% macro dq_analytical_empty_summary_result_sql() %}
@@ -39,7 +122,7 @@
         , cast(null as {{ dbt.type_string() }}) as result
         , cast(null as {{ dbt.type_string() }}) as medicare_ffs
         , cast(null as {{ dbt.type_string() }}) as tuva_synthetic
-    {{ the_tuva_project.dq_empty_result_guard_sql() }}
+    {{ key_metrics_empty_result_guard_sql() }}
 {% endmacro %}
 
 {% macro dq_analytical_count_result_sql(result_expression) %}
@@ -89,7 +172,7 @@
 {% endmacro %}
 
 {% macro dq_analytical_relation(model_name) %}
-    {{ return(the_tuva_project.dq_actual_relation(dq_find_analytical_node(model_name))) }}
+    {{ return(key_metrics_actual_relation(dq_find_analytical_node(model_name))) }}
 {% endmacro %}
 
 {% macro dq_analytical_string_literal(value) %}

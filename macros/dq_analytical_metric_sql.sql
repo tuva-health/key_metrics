@@ -5,7 +5,7 @@
         , cast({{ dq_analytical_string_literal(metric) }} as {{ dbt.type_string() }}) as metric
         , cast({{ result_expression }} as {{ dbt.type_numeric() }}) as result
     from (
-        {{ the_tuva_project.dq_source_dimension_sql(source_relation) }}
+        {{ key_metrics_source_dimension_sql(source_relation) }}
     ) as sources
     left join (
         {{ metric_sql }}
@@ -20,7 +20,7 @@
         , cast({{ dq_analytical_string_literal(metric) }} as {{ dbt.type_string() }}) as metric
         , cast(null as {{ dbt.type_numeric() }}) as result
     from (
-        {{ the_tuva_project.dq_source_dimension_sql(source_relation) }}
+        {{ key_metrics_source_dimension_sql(source_relation) }}
     ) as sources
 {% endmacro %}
 
@@ -41,14 +41,14 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as member_months
                 from {{ core_member_months_rel }}
                 group by 1
             ) as member_month_totals
             left join (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as encounter_count
                 from {{ core_encounter_rel }}
                 where encounter_type = {{ dq_analytical_string_literal(encounter_type) }}
@@ -75,7 +75,7 @@
     {% if execute and core_encounter_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , count(*) as result
             from {{ core_encounter_rel }}
             where encounter_type = {{ dq_analytical_string_literal(encounter_type) }}
@@ -111,14 +111,14 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as member_months
                 from {{ core_member_months_rel }}
                 group by 1
             ) as member_month_totals
             left join (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , coalesce(sum(length_of_stay), 0) as total_days
                 from {{ core_encounter_rel }}
                 where encounter_type = {{ dq_analytical_string_literal(encounter_type) }}
@@ -145,7 +145,7 @@
     {% if execute and core_encounter_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , avg(cast(length_of_stay as {{ dbt.type_numeric() }})) as result
             from {{ core_encounter_rel }}
             where encounter_type = {{ dq_analytical_string_literal(encounter_type) }}
@@ -170,7 +170,7 @@
     {% if execute and core_encounter_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , avg(cast(paid_amount as {{ dbt.type_numeric() }})) as result
             from {{ core_encounter_rel }}
             where encounter_type = {{ dq_analytical_string_literal(encounter_type) }}
@@ -195,7 +195,7 @@
     {% if execute and core_encounter_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , case
                     when count(*) = 0 then 0
                     else (
@@ -233,8 +233,8 @@
     {% if execute and financial_pmpm_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
-                , avg(cast({{ the_tuva_project.quote_column(value_column) }} as {{ dbt.type_numeric() }})) as result
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
+                , avg(cast({{ key_metrics_quote_column(value_column) }} as {{ dbt.type_numeric() }})) as result
             from {{ financial_pmpm_rel }}
             group by 1
         {% endset %}
@@ -257,7 +257,7 @@
     {% if execute and core_member_months_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , count(*) as result
             from {{ core_member_months_rel }}
             group by 1
@@ -285,7 +285,7 @@
                 , avg(cast(patient_counts.member_month_count as {{ dbt.type_numeric() }})) as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , person_id
                     , count(*) as member_month_count
                 from {{ core_member_months_rel }}
@@ -316,7 +316,7 @@
                 , max(patient_counts.member_month_count) as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , person_id
                     , count(*) as member_month_count
                 from {{ core_member_months_rel }}
@@ -383,13 +383,13 @@
                 , source_rows.data_source
             from (
                 {% if core_medical_claim_rel is not none and core_pharmacy_claim_rel is not none %}
-                    {{ the_tuva_project.dq_source_dimension_sql(core_medical_claim_rel) }}
+                    {{ key_metrics_source_dimension_sql(core_medical_claim_rel) }}
                     union all
-                    {{ the_tuva_project.dq_source_dimension_sql(core_pharmacy_claim_rel) }}
+                    {{ key_metrics_source_dimension_sql(core_pharmacy_claim_rel) }}
                 {% elif core_medical_claim_rel is not none %}
-                    {{ the_tuva_project.dq_source_dimension_sql(core_medical_claim_rel) }}
+                    {{ key_metrics_source_dimension_sql(core_medical_claim_rel) }}
                 {% else %}
-                    {{ the_tuva_project.dq_source_dimension_sql(core_pharmacy_claim_rel) }}
+                    {{ key_metrics_source_dimension_sql(core_pharmacy_claim_rel) }}
                 {% endif %}
             ) as source_rows
         ) as sources
@@ -399,7 +399,7 @@
                 , count(distinct claim_members.person_id) as result
             from (
                 select
-                      coalesce(data_source, '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(data_source, '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , data_source
                     , person_id
                     , claim_start_date
@@ -410,7 +410,7 @@
             ) as claim_members
             left join (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , person_id
                     , enrollment_start_date
                     , enrollment_end_date
@@ -456,14 +456,14 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as total_encounters
                 from {{ ed_classification_rel }}
                 group by 1
             ) as totals
             left join (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as encounters
                 from {{ ed_classification_rel }}
                 where {{ classification_condition }}
@@ -490,7 +490,7 @@
     {% if execute and core_patient_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , count(distinct person_id) as result
             from {{ core_patient_rel }}
             {% if where_sql is not none %}
@@ -527,14 +527,14 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(distinct person_id) as total_patients
                 from {{ core_patient_rel }}
                 group by 1
             ) as patient_totals
             left join (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(distinct person_id) as patient_count
                 from {{ core_patient_rel }}
                 where {{ where_sql }}
@@ -563,7 +563,7 @@
     {% if core_patient_rel is not none %}
         {% set patient_deceased_query %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , person_id
             from {{ core_patient_rel }}
             where death_flag = 1
@@ -574,7 +574,7 @@
     {% if core_encounter_rel is not none %}
         {% set encounter_deceased_query %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , person_id
             from {{ core_encounter_rel }}
             where discharge_disposition_code = '20'
@@ -595,7 +595,7 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(distinct person_id) as total_patients
                 from {{ core_patient_rel }}
                 group by 1
@@ -657,7 +657,7 @@
     {% if execute and core_encounter_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , count(*) as result
             from {{ core_encounter_rel }}
             where encounter_type = 'acute inpatient'
@@ -683,7 +683,7 @@
     {% if execute and readmission_summary_rel is not none and readmission_augmented_rel is not none %}
         {% set metric_sql %}
             select
-                  coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                  coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                 , sum(case when {{ flag_expression }} then 1 else 0 end) as result
             from {{ readmission_summary_rel }} as summary
             inner join {{ readmission_augmented_rel }} as augmented
@@ -720,7 +720,7 @@
                   end as result
             from (
                 select
-                      coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , sum(case when summary.index_admission_flag = 1 then 1 else 0 end) as index_admissions
                     , sum(case when {{ numerator_expression }} then 1 else 0 end) as numerator
                 from {{ readmission_summary_rel }} as summary
@@ -760,7 +760,7 @@
                   end as result
             from (
                 select
-                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , count(*) as acute_inpatient_visits
                 from {{ core_encounter_rel }}
                 where encounter_type = 'acute inpatient'
@@ -768,7 +768,7 @@
             ) as acute_inpatient_counts
             left join (
                 select
-                      coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                      coalesce(cast(augmented.data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                     , sum(case when summary.index_admission_flag = 1 then 1 else 0 end) as index_admissions
                 from {{ readmission_summary_rel }} as summary
                 inner join {{ readmission_augmented_rel }} as augmented
@@ -810,14 +810,14 @@
                       end as result
                 from (
                     select
-                          coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                          coalesce(cast(data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                         , count(distinct person_id) as total_patients
                     from {{ core_patient_rel }}
                     group by 1
                 ) as patient_totals
                 left join (
                     select
-                          coalesce(cast(patient.data_source as {{ dbt.type_string() }}), '{{ the_tuva_project.dq_source_key_sentinel() }}') as data_source_key
+                          coalesce(cast(patient.data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                         , count(distinct patient.person_id) as patient_count
                     from {{ chronic_condition_long_rel }} as conditions
                     inner join (

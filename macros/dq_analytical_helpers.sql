@@ -27,7 +27,7 @@
         , cast(null as {{ dbt.type_string() }}) as category
         , cast(null as {{ dbt.type_string() }}) as metric
         , cast(null as {{ dbt.type_numeric() }}) as result
-    {{ dq_empty_result_guard_sql() }}
+    {{ the_tuva_project.dq_empty_result_guard_sql() }}
 {% endmacro %}
 
 {% macro dq_analytical_empty_summary_result_sql() %}
@@ -39,7 +39,7 @@
         , cast(null as {{ dbt.type_string() }}) as result
         , cast(null as {{ dbt.type_string() }}) as medicare_ffs
         , cast(null as {{ dbt.type_string() }}) as tuva_synthetic
-    {{ dq_empty_result_guard_sql() }}
+    {{ the_tuva_project.dq_empty_result_guard_sql() }}
 {% endmacro %}
 
 {% macro dq_analytical_count_result_sql(result_expression) %}
@@ -89,7 +89,7 @@
 {% endmacro %}
 
 {% macro dq_analytical_relation(model_name) %}
-    {{ return(dq_actual_relation(dq_find_analytical_node(model_name))) }}
+    {{ return(the_tuva_project.dq_actual_relation(dq_find_analytical_node(model_name))) }}
 {% endmacro %}
 
 {% macro dq_analytical_string_literal(value) %}

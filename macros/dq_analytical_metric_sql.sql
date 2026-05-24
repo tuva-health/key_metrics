@@ -794,10 +794,9 @@
     {% set core_patient_rel = dq_analytical_relation('core__patient') %}
     {% set chronic_condition_long_rel = dq_analytical_relation('chronic_conditions__tuva_chronic_conditions_long') %}
     {% set hierarchy_rel = dq_analytical_relation('chronic_conditions__tuva_chronic_conditions_hierarchy') %}
-    {% set concept_library_rel = dq_analytical_relation('clinical_concept_library__value_set_member_relevant_fields') %}
 
     {% if execute and core_patient_rel is not none %}
-        {% if chronic_condition_long_rel is not none and hierarchy_rel is not none and concept_library_rel is not none %}
+        {% if chronic_condition_long_rel is not none and hierarchy_rel is not none %}
             {% set metric_sql %}
                 select
                       patient_totals.data_source_key
@@ -822,14 +821,12 @@
                     from {{ chronic_condition_long_rel }} as conditions
                     inner join (
                         select distinct
-                              concept_library.concept_name
+                              hierarchy.condition
                         from {{ hierarchy_rel }} as hierarchy
-                        inner join {{ concept_library_rel }} as concept_library
-                            on hierarchy.icd_10_cm_code = concept_library.code
                         where hierarchy.condition_family = {{ dq_analytical_string_literal(condition_family) }}
                           and hierarchy.condition = {{ dq_analytical_string_literal(source_condition_name) }}
                     ) as condition_concepts
-                        on conditions.condition = condition_concepts.concept_name
+                        on conditions.condition = condition_concepts.condition
                     inner join {{ core_patient_rel }} as patient
                         on conditions.person_id = patient.person_id
                     group by 1

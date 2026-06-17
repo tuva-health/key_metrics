@@ -26,7 +26,7 @@
 
 {% macro dq_analytical_encounter_visits_per_1000_sql(category, metric, encounter_type) %}
     {% set core_encounter_rel = dq_analytical_relation('core__encounter') %}
-    {% set core_member_months_rel = dq_analytical_relation('core__member_months') %}
+    {% set core_member_months_rel = dq_analytical_relation('core__member_month') %}
 
     {% if execute and core_encounter_rel is not none and core_member_months_rel is not none %}
         {% set metric_sql %}
@@ -96,7 +96,7 @@
 
 {% macro dq_analytical_encounter_days_per_1000_sql(category, metric, encounter_type) %}
     {% set core_encounter_rel = dq_analytical_relation('core__encounter') %}
-    {% set core_member_months_rel = dq_analytical_relation('core__member_months') %}
+    {% set core_member_months_rel = dq_analytical_relation('core__member_month') %}
 
     {% if execute and core_encounter_rel is not none and core_member_months_rel is not none %}
         {% set metric_sql %}
@@ -252,7 +252,7 @@
 {% endmacro %}
 
 {% macro dq_analytical_total_member_months_sql(category, metric) %}
-    {% set core_member_months_rel = dq_analytical_relation('core__member_months') %}
+    {% set core_member_months_rel = dq_analytical_relation('core__member_month') %}
 
     {% if execute and core_member_months_rel is not none %}
         {% set metric_sql %}
@@ -276,7 +276,7 @@
 {% endmacro %}
 
 {% macro dq_analytical_average_member_months_sql(category, metric) %}
-    {% set core_member_months_rel = dq_analytical_relation('core__member_months') %}
+    {% set core_member_months_rel = dq_analytical_relation('core__member_month') %}
 
     {% if execute and core_member_months_rel is not none %}
         {% set metric_sql %}
@@ -307,7 +307,7 @@
 {% endmacro %}
 
 {% macro dq_analytical_max_member_months_sql(category, metric) %}
-    {% set core_member_months_rel = dq_analytical_relation('core__member_months') %}
+    {% set core_member_months_rel = dq_analytical_relation('core__member_month') %}
 
     {% if execute and core_member_months_rel is not none %}
         {% set metric_sql %}
@@ -792,11 +792,9 @@
 
 {% macro dq_analytical_chronic_condition_prevalence_sql(category, metric, condition_family, source_condition_name) %}
     {% set core_patient_rel = dq_analytical_relation('core__patient') %}
-    {% set chronic_condition_long_rel = dq_analytical_relation('chronic_conditions__tuva_chronic_conditions_long') %}
-    {% set hierarchy_rel = dq_analytical_relation('chronic_conditions__tuva_chronic_conditions_hierarchy') %}
+    {% set core_condition_rel = dq_analytical_relation('core__condition') %}
 
-    {% if execute and core_patient_rel is not none %}
-        {% if chronic_condition_long_rel is not none and hierarchy_rel is not none %}
+    {% if execute and core_patient_rel is not none and core_condition_rel is not none %}
             {% set metric_sql %}
                 select
                       patient_totals.data_source_key
@@ -818,17 +816,12 @@
                     select
                           coalesce(cast(patient.data_source as {{ dbt.type_string() }}), '{{ key_metrics_source_key_sentinel() }}') as data_source_key
                         , count(distinct patient.person_id) as patient_count
-                    from {{ chronic_condition_long_rel }} as conditions
-                    inner join (
-                        select distinct
-                              hierarchy.condition
-                        from {{ hierarchy_rel }} as hierarchy
-                        where hierarchy.condition_family = {{ dq_analytical_string_literal(condition_family) }}
-                          and hierarchy.condition = {{ dq_analytical_string_literal(source_condition_name) }}
-                    ) as condition_concepts
-                        on conditions.condition = condition_concepts.condition
+                    from {{ core_condition_rel }} as conditions
                     inner join {{ core_patient_rel }} as patient
                         on conditions.person_id = patient.person_id
+                       and conditions.data_source = patient.data_source
+                    where conditions.condition_family = {{ dq_analytical_string_literal(condition_family) }}
+                      and conditions.condition = {{ dq_analytical_string_literal(source_condition_name) }}
                     group by 1
                 ) as condition_counts
                     on patient_totals.data_source_key = condition_counts.data_source_key
@@ -841,9 +834,6 @@
                 metric_sql,
                 "metric_results.result"
             ) }}
-        {% else %}
-            {{ dq_analytical_empty_result_sql() }}
-        {% endif %}
     {% else %}
         {{ dq_analytical_empty_result_sql() }}
     {% endif %}
